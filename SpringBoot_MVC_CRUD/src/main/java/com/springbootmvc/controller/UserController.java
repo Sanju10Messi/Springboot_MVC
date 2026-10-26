@@ -1,10 +1,12 @@
 package com.springbootmvc.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.springbootmvc.entities.Users;
@@ -44,14 +46,44 @@ public class UserController {
 	
 		userService.saveUser(user);
 		
-		return "redirect:/";
+		return "redirect:/view";
 	}
 	
 	@GetMapping("/view")
-	public String showView() {
+	public String showView(Model model) {
 		
+	List<Users> userList =	userService.getAllUsers();
+	model.addAttribute("userList", userList);	
+	
 		return "view";
 	}
+	
+	@GetMapping("/edit/{id}")
+	public String showEdit(@PathVariable Integer id, Model model) {
+		
+		Users user =  userService.getUserById(id);
+		model.addAttribute("userEdit", user);
+		return "edit";
+	}
+	
+
+@PostMapping("/update")
+public String updateUser(@ModelAttribute Users user) {
+
+
+    	userService.updateUser(user, user.getId());
+
+    return "redirect:/view";
+}
+    
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Integer id) {
+
+    	userService.deleteUser(id);
+
+        return "redirect:/view";
+    }
+
 	
 	
 	
