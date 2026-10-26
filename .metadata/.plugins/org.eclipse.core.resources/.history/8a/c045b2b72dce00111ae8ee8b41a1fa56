@@ -1,5 +1,0 @@
-package com.springbootmvc.serviceImpl;
-
-public class UserServiceImpl {
-
-}
