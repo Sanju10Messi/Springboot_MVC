@@ -2,17 +2,18 @@ package com.springbootmvc.service;
 
 import java.util.List;
 
-import com.springbootmvc.entities.Users;
+import com.springbootmvc.dto.UserDto;
+
 
 public interface UserService {
 
-	Users saveUser(Users user);
+	UserDto saveUser(UserDto userDto);
 	
-	List<Users> getAllUsers();
+	List<UserDto> getAllUsers();
 
-	Users getUserById(Integer id);
+	UserDto getUserById(Integer id);
 	
-	Users updateUser(Users existingUser, Integer id);
+	UserDto updateUser(UserDto existingUser, Integer id);
 	
 	void deleteUser(Integer id);
 

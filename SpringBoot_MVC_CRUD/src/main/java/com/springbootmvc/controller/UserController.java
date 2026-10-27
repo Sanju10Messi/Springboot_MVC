@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.springbootmvc.dto.UserDto;
 import com.springbootmvc.entities.Users;
 import com.springbootmvc.service.UserService;
 
@@ -29,7 +30,7 @@ public class UserController {
 	
 	@GetMapping("/register")
 	public String showRegister(Model model) {
-		model.addAttribute("user", new Users());
+		model.addAttribute("userdto", new UserDto());
 		return "register";
 	}
 	
@@ -42,9 +43,9 @@ public class UserController {
 //	}
 	
 	@PostMapping("/save")
-	public String saveUser(@ModelAttribute Users user) {
+	public String saveUser(@ModelAttribute UserDto userDto) {
 	
-		userService.saveUser(user);
+		userService.saveUser(userDto);
 		
 		return "redirect:/view";
 	}
@@ -52,29 +53,28 @@ public class UserController {
 	@GetMapping("/view")
 	public String showView(Model model) {
 		
-	List<Users> userList =	userService.getAllUsers();
-	model.addAttribute("userList", userList);	
+	List<UserDto> userDtoList =	userService.getAllUsers();
+	model.addAttribute("userDtoList", userDtoList);	
 	
 		return "view";
 	}
 	
 	@GetMapping("/edit/{id}")
-	public String showEdit(@PathVariable Integer id, Model model) {
-		
-		Users user =  userService.getUserById(id);
-		model.addAttribute("userEdit", user);
+	public String showEdit(@PathVariable Integer id, Model model) {		
+
+		UserDto userdto =  userService.getUserById(id);
+		model.addAttribute("userdto", userdto);
 		return "edit";
 	}
 	
 
-@PostMapping("/update")
-public String updateUser(@ModelAttribute Users user) {
-
-
-    	userService.updateUser(user, user.getId());
-
-    return "redirect:/view";
-}
+	@PostMapping("/update")
+	public String updateUser(@ModelAttribute UserDto userDto) {
+	
+	    	userService.updateUser(userDto, userDto.getId());
+	
+	    return "redirect:/view";
+	}
     
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Integer id) {

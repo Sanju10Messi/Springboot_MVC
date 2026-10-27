@@ -1,10 +1,14 @@
 package com.springbootmvc.serviceImpl;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.springbootmvc.dto.UserDto;
 import com.springbootmvc.entities.Users;
+import com.springbootmvc.helpper.UserMapper;
 import com.springbootmvc.repository.UserRepository;
 import com.springbootmvc.service.UserService;
 
@@ -18,29 +22,40 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Users saveUser(Users user) {
+	public UserDto saveUser(UserDto userDto) {
 		
-		return userRepo.save(user);
+		Users user = UserMapper.dtoToEntity(userDto);
+		
+	Users user1 = userRepo.save(user);
+		
+		UserDto dtoObj = UserMapper.entityToDto(user1); 
+		
+		return dtoObj;
 	}
 
 	@Override
-	public List<Users> getAllUsers() {
+	public List<UserDto> getAllUsers() {
+		
 	List<Users> userlist = userRepo.findAll();
-		return userlist;
+	// convert entity to dto
+	List<UserDto> dtoObj = userlist.stream().map(entity-> UserMapper.entityToDto(entity)).collect(Collectors.toList()); 
+	
+		return dtoObj;
 	}
 
 	@Override
-	public Users getUserById(Integer id) {
+	public UserDto getUserById(Integer id) {
 		
 	Users user  = userRepo.findById(id).orElse(null);
-		
-		return user;
+	// convert entity to Dto
+		UserDto dtoObj = UserMapper.entityToDto(user);
+		return dtoObj;
 	}
 
 	@Override
-	public Users updateUser(Users updateUser, Integer id) {
+	public UserDto updateUser(UserDto updateUser, Integer id) {
 		
-		Users user = getUserById(id);
+		Users user = userRepo.findById(id).orElse(null);
 		if(user != null) {
 			user.setName(updateUser.getName());
 			user.setEmail(updateUser.getEmail());
@@ -48,11 +63,12 @@ public class UserServiceImpl implements UserService {
 			user.setAddress(updateUser.getAddress());
 			user.setAadhar(updateUser.getAadhar());
 			user.setPan(updateUser.getPan());
-			
 			userRepo.save(user);
+			
+			return UserMapper.entityToDto(user);
 		}
 		
-		return user;
+		return null;
 	}
 
 	@Override
