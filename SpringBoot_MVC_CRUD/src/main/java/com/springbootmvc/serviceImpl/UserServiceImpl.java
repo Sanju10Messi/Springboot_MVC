@@ -1,14 +1,14 @@
 package com.springbootmvc.serviceImpl;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springbootmvc.dto.UserDto;
 import com.springbootmvc.entities.Users;
-import com.springbootmvc.helpper.UserMapper;
 import com.springbootmvc.repository.UserRepository;
 import com.springbootmvc.service.UserService;
 
@@ -16,29 +16,33 @@ import com.springbootmvc.service.UserService;
 public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepo;
-
-	UserServiceImpl(UserRepository userRepo) {
+	
+	private final ModelMapper modelMapper;
+	
+	UserServiceImpl(UserRepository userRepo, ModelMapper modelMapper) {
 		this.userRepo = userRepo;
+		this.modelMapper = modelMapper;
 	}
 
 	@Override
 	public UserDto saveUser(UserDto userDto) {
 		
-		Users user = UserMapper.dtoToEntity(userDto);
+		Users user = modelMapper.map(userDto, Users.class);
 		
 	Users user1 = userRepo.save(user);
 		
-		UserDto dtoObj = UserMapper.entityToDto(user1); 
+		UserDto dtoObj = modelMapper.map(user1, UserDto.class); 
 		
 		return dtoObj;
 	}
+	
 
 	@Override
 	public List<UserDto> getAllUsers() {
 		
 	List<Users> userlist = userRepo.findAll();
 	// convert entity to dto
-	List<UserDto> dtoObj = userlist.stream().map(entity-> UserMapper.entityToDto(entity)).collect(Collectors.toList()); 
+	List<UserDto> dtoObj = userlist.stream().map(entity-> modelMapper.map(entity, UserDto.class)).collect(Collectors.toList()); 
 	
 		return dtoObj;
 	}
@@ -48,7 +52,7 @@ public class UserServiceImpl implements UserService {
 		
 	Users user  = userRepo.findById(id).orElse(null);
 	// convert entity to Dto
-		UserDto dtoObj = UserMapper.entityToDto(user);
+		UserDto dtoObj = modelMapper.map(user, UserDto.class);
 		return dtoObj;
 	}
 
@@ -65,7 +69,7 @@ public class UserServiceImpl implements UserService {
 			user.setPan(updateUser.getPan());
 			userRepo.save(user);
 			
-			return UserMapper.entityToDto(user);
+			return modelMapper.map(user, UserDto.class);
 		}
 		
 		return null;
