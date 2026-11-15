@@ -1,6 +1,8 @@
 package com.springbootmvc.service;
 
-import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.springbootmvc.dto.UserDto;
 
@@ -9,7 +11,7 @@ public interface UserService {
 
 	UserDto saveUser(UserDto userDto);
 	
-	List<UserDto> getAllUsers();
+	Page<UserDto> getAllUsers(Pageable pageable);
 
 	UserDto getUserById(Integer id);
 	

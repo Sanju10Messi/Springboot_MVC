@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springbootmvc.dto.UserDto;
@@ -38,12 +40,11 @@ public class UserServiceImpl implements UserService {
 	
 
 	@Override
-	public List<UserDto> getAllUsers() {
+	public Page<UserDto> getAllUsers(Pageable pageable) {
 		
-	List<Users> userlist = userRepo.findAll();
+	Page<Users>	page = userRepo.findAll(pageable);
 	// convert entity to dto
-	List<UserDto> dtoObj = userlist.stream().map(entity-> modelMapper.map(entity, UserDto.class)).collect(Collectors.toList()); 
-	
+	Page<UserDto> dtoObj = page.map(u-> modelMapper.map(u, UserDto.class));
 		return dtoObj;
 	}
 

@@ -32,7 +32,7 @@
 				  </thead>
 				  
 				  <tbody>
-				    <tr th:each="u:${userDtoList}">
+				    <tr th:each="u:${userpages.content}">
 				      <th scope="row" th:text="${u.id}"></th>
 				      <td th:text="${u.name}"></td>
 				      <td th:text="${u.email}"></td>
@@ -44,10 +44,31 @@
 						<a class="btn btn-warning" th:href="@{/edit/{id}(id=${u.id})}">Edit</a>
 						<a class="btn btn-danger" th:href="@{/delete/{id}(id=${u.id})}">Delete</a>
 					  </td>
+					  
 				    </tr>
 				    
 				  </tbody>
 				</table>
+				
+<!--Pagination Start-->
+				
+		<nav aria-label="Page navigation example">
+		  <ul class="pagination">
+		    <li class="page-item"><a class="page-link" th:href="@{/view(pageNo=${currentpage - 1})}">Previous</a></li>
+		    <li class="page-item" th:each="i : ${#numbers.sequence(0, userpages.totalPages - 1)}">
+				<a class="page-link" th:text="${i + 1}"
+				th:href="@{/view(pageNo=${i})}"></a></li>
+
+				<li class="page-item"
+				    th:classappend="${!userpages.hasNext()} ? 'disabled'">
+
+				    <a class="page-link" th:href="@{/view(pageNo=${currentpage + 1})}">
+				        Next
+				    </a></li>
+		  </ul>
+		</nav>
+
+<!--Pagination End-->
 				
 			</div>
 		</div>
